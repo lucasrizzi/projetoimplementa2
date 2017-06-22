@@ -8,19 +8,19 @@ typedef struct lista lista_t;
 typedef struct celula celula_t;
 
 /*
- * Cria uma lista e a inicializa como lista vazia. 
- * "imp" eh um ponteiro para uma funcao de impressao dos dados armazenados dentro da lista. Deve ser usado em "lista_imprime". 
- * o argumento "libera" prove uma maneira de liberar dinamicamente os dados dentro da celula quando "lista_destroi" eh chamada. 
- * Para uma lista onde os dados nao devem ser liberados, libera deve ser NULL 
- * "comparar" eh um ponteiro para funcao de comparacao entre dois dados armazenados na lista. 
- * Deve retornar -1 se o primeiro eh menor que o segundo, 0 se forem iguais, ou 1 se o primeiro for maior que o segundo   
+ * Cria uma lista e a inicializa como lista vazia.
+ * "imp" eh um ponteiro para uma funcao de impressao dos dados armazenados dentro da lista. Deve ser usado em "lista_imprime".
+ * o argumento "libera" prove uma maneira de liberar dinamicamente os dados dentro da celula quando "lista_destroi" eh chamada.
+ * Para uma lista onde os dados nao devem ser liberados, libera deve ser NULL
+ * "comparar" eh um ponteiro para funcao de comparacao entre dois dados armazenados na lista.
+ * Deve retornar -1 se o primeiro eh menor que o segundo, 0 se forem iguais, ou 1 se o primeiro for maior que o segundo
  * Pre: nenhuma
  * Pos: Retorna um ponteiro para uma lista vazia se houver memaria disponivel
  */
-lista_t *lista_cria(void (*imp)(const void *), void (*libera)(void *), int (*comparar)(const void *, const void *));
+lista_t *lista_cria(void (*imp)(const void *), void (*libera)(void *), int (*comparar)(const void *, const void *),void(*salva)(const void*,FILE*));
 
 /*
- * Destroi a lista especificada em "l". Nenhuma operacao eh permitida apos a funcao, a nao ser que lista cria seja chamada novamente. 
+ * Destroi a lista especificada em "l". Nenhuma operacao eh permitida apos a funcao, a nao ser que lista cria seja chamada novamente.
  * Destroi todos os elementos armazenados na lista se o ponteiro "destruir" for valido
  * Pre: "l" deve ser uma lista valida criada previamente atraves da funcao lista cria
  * Pos: os recursos da lista foram liberados com sucesso e a lista "l" torna-se nula
@@ -92,7 +92,7 @@ int lista_eh_cauda(lista_t *l, celula_t *c);
 
 /*
  * Insere um elemento na lista imeadiamente apos um elemento determinado e recebido como parametro da funcao (celula "c").
- * Caso esse parametro seja invalido, insere o novo elemento na cabeca da lista. 
+ * Caso esse parametro seja invalido, insere o novo elemento na cabeca da lista.
  * Retorna 1 caso conseguir inserir, 0 caso contrario
  * Pre: A lista e o novo elemento a ser inserido devem ser validos
  * Pos: O elemento recebido como parametro eh inserido logo apos a celula "c" ou na cabeca da lista
@@ -101,7 +101,7 @@ int lista_insere_proximo(lista_t *l, celula_t *c, const void *elem);
 
 /*
  * Insere um elemento na lista imeadiamente antes a um elemento determinado e recebido como parametro da funcao (celula "c").
- * Caso esse parametro seja invalido, insere o novo elemento na cabeca da lista. 
+ * Caso esse parametro seja invalido, insere o novo elemento na cabeca da lista.
  * Retorna 1 caso conseguir inserir, 0 caso contrario
  * Pre: A lista e o novo elemento a ser inserido devem ser validos
  * Pos: O elemento recebido como parametro eh inserido antes da celula "c" ou na cabeca da lista
@@ -117,8 +117,8 @@ int lista_insere_anterior(lista_t *l, celula_t *c, const void *elem);
  */
 int lista_insere_posicao(lista_t *l, const unsigned int posicao, const void *elem);
 
-/* 
- * Remove o elemento conhecido e recebido como parametro. Retorna o conteudo do elemento removido em uma variavel recebida como parametro. 
+/*
+ * Remove o elemento conhecido e recebido como parametro. Retorna o conteudo do elemento removido em uma variavel recebida como parametro.
  * Retorna 1 caso conseguir remover, 0 caso contrario.
  * Pre: a lista deve existir e nao deve estar vazia, a celula a ser removida e a variavel recebida para armazenar o conteudo removido devem ser validas
  * Pos: a lista tera um elemento a menos e seu conteudo sera retornado dentro de uma variavel recebida como parametro
@@ -155,7 +155,7 @@ celula_t *lista_busca_recursiva(lista_t *l, const void *elem, celula_t *c);
 /*
  * Separa a lista recebida como parametro em duas, de tal forma que a segunda lista comece na primeira celula logo apos a celula que contem o elemento recebido como parametro.
  * A funcao deve retornar um ponteiro para a segunda sub-divisao da lista original, enquanto l deve continuar apontando para o primeiro elemento da primeira sub-divisao da lista.
- * Se o elemento recebido como parametro for NULL ou nao estiver na lista "l", a funcao nao faz nada e retorna NULL. 
+ * Se o elemento recebido como parametro for NULL ou nao estiver na lista "l", a funcao nao faz nada e retorna NULL.
  * A nova lista deve ter os mesmos ponteiros internos (imprime, compara e destruir) da lista "l"
  * Pre: lista deve existir e o elemento recebido como parametro deve ser valido
  * Pos: retorna um ponteiro para a nova lista que inicia logo apos a celula que contem "elem". Esta celula torna-se a cauda da lista "l". Retorna NULL caso nao conseguir separar a lista
@@ -167,10 +167,24 @@ lista_t *lista_separa(lista_t *l, const void *elem);
  * Depois da funcao ser chamada, as listas "l1" e "l2" nao sao mais validas (serao destruidas) e suas celulas estarao dentro da lista retornada.
  * A nova lista deve ter os mesmos ponteiros internos (imprime, compara e destruir) da lista "l1" ou da lista "l2" se a "l1" for vazia
  * Pre: "l1" e "l2" devem ser listas validas (observe que elas podem ser vazias).
- * Pos: retorna uma nova lista contendo a concatenacao das duas listas recebidas como parametro. Retorna NULL caso nao conseguir concatenar as duas listas. 
- * Retorna NULL se ambas forem vazias (sem destrui-las). 
+ * Pos: retorna uma nova lista contendo a concatenacao das duas listas recebidas como parametro. Retorna NULL caso nao conseguir concatenar as duas listas.
+ * Retorna NULL se ambas forem vazias (sem destrui-las).
  * Apos a execucao, l1 e l2 nao sao mais listas validas e foram destruidas.
  */
 lista_t *lista_concatena_e_destroi(lista_t **l1, lista_t **l2);
+
+void imprime_linha(lista_t *buffer);
+
+void lista_salva(lista_t *l,FILE *arquivo);
+
+void altera_current(lista_t *buffer,celula_t* posicao);
+
+celula_t *retorna_current(lista_t *buffer);
+
+void pequeno_altera_current(lista_t *buffer,int praonde);
+
+celula_t *retorna_current_anterior(lista_t *buffer);
+
+celula_t *retorna_current_proximo(lista_t *buffer);
 
 #endif

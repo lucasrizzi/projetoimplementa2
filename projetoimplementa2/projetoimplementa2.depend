@@ -1,0 +1,20 @@
+# depslib dependency file v1.0
+1498173375 source:c:\users\lucas\documents\assuntosfaculdade\prog\projetoimplemeta2\projetoimplementa2\lista.c
+	<stdlib.h>
+	<stdio.h>
+	<lista_privado.h>
+
+1498173375 c:\users\lucas\documents\assuntosfaculdade\prog\projetoimplemeta2\projetoimplementa2\lista_privado.h
+	"lista_interface.h"
+
+1498173375 c:\users\lucas\documents\assuntosfaculdade\prog\projetoimplemeta2\projetoimplementa2\lista_interface.h
+
+1498173375 source:c:\users\lucas\documents\assuntosfaculdade\prog\projetoimplemeta2\projetoimplementa2\main.c
+	<stdio.h>
+	<stdlib.h>
+	"lista_interface.h"
+	"trabalho_interface.h"
+
+1498173469 c:\users\lucas\documents\assuntosfaculdade\prog\projetoimplemeta2\projetoimplementa2\trabalho_interface.h
+	"lista_interface.h"
+

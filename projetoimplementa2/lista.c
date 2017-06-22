@@ -1,7 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <lista_privado.h>
 
-lista_t *lista_cria(void (*imp)(const void *),void (*libera)(void *), int (*comparar)(const void *, const void *)){
+lista_t *lista_cria(void (*imp)(const void *), void (*libera)(void *), int (*comparar)(const void *, const void *),void(*salva)(const void*,FILE*)){
     lista_t  *novalista;
    	novalista=(lista_t*)malloc(sizeof(lista_t));
    	if (novalista==NULL){
@@ -13,8 +14,11 @@ lista_t *lista_cria(void (*imp)(const void *),void (*libera)(void *), int (*comp
 	novalista->compara=comparar;
     novalista->cauda= NULL;
 	novalista->cabeca= NULL;
+	novalista->current=NULL;
+	novalista->salvar=salva;
     	return novalista;
-     }
+}
+
 void lista_destroi(lista_t **l){
         	if(l==NULL){
 	return;
@@ -30,7 +34,7 @@ void lista_destroi(lista_t **l){
         free(*l);
         *l=NULL;
     }
-    
+
 int lista_vazia(lista_t *l){
     	if(l==NULL){
     	     return -1;
@@ -39,13 +43,15 @@ int lista_vazia(lista_t *l){
     	    return 0;
     	}
  	return 1;
-    }
+}
+
 int lista_tamanho(lista_t *l){
     	if(l==NULL){
     	    return -1;
     	}
 	return l->tamanho;
-    }
+}
+
 celula_t *lista_cabeca(lista_t *l){
     	if(l==NULL){
    	    return NULL;
@@ -63,7 +69,7 @@ void *lista_dado(celula_t *c){
 	        return NULL;
 	    }
         return c->dado;
-    }	
+    }
 celula_t *lista_proximo(celula_t *c){
     if(c==NULL){
 	    return NULL;
@@ -78,13 +84,13 @@ celula_t *lista_anterior(celula_t *c){
    }
 int lista_eh_cabeca(lista_t *l, celula_t *c){
 	if(l==NULL){
-   	    return NULL;
+   	    return 0;
 	}
 	if(lista_vazia(l)){
-	return NULL;
+	return 0;
 	}
 	if(c==NULL){
-	return NULL;
+	return 0;
 	}
    	if(c==l->cabeca){
    	return 1;
@@ -93,13 +99,13 @@ int lista_eh_cabeca(lista_t *l, celula_t *c){
    }
 int lista_eh_cauda(lista_t *l, celula_t *c){
    	if(l==NULL){
-   	    return NULL;
+   	    return 0;
 	}
 	if(lista_vazia(l)){
-	return NULL;
+	return 0;
 	}
 	if(c==NULL){
-	return NULL;
+	return 0;
 	}
    	if(c==l->cauda){
    	return 1;
@@ -112,10 +118,10 @@ void lista_imprime(lista_t *l){
 	}
 	if(l->imprime==NULL){
 	return ;
-	}	
+	}
    	celula_t *cel;
 	cel=l->cabeca;
-   	while (1){
+   	while (1){//desejo pela reprovacao
 	if (cel==NULL){
 	return ;}
    	l->imprime(cel->dado);
@@ -167,7 +173,7 @@ lista_t *lista_concatena_e_destroi(lista_t **l1, lista_t **l2){
   }
 //----------------------------------------------------------------------------------
 int lista_insere_proximo(lista_t *l, celula_t *c, const void *elem){
-    	if (l==NULL){
+    if (l==NULL){
         	return 0;
     	}
    	 if (elem==NULL){
@@ -201,8 +207,8 @@ int lista_insere_proximo(lista_t *l, celula_t *c, const void *elem){
     	l->tamanho=l->tamanho+1;
     	return 1;
 }
-   
-  
+
+
 int lista_insere_anterior(lista_t *l, celula_t *c, const void *elem){
    	if (l==NULL){
         		return 0;
@@ -214,7 +220,7 @@ int lista_insere_anterior(lista_t *l, celula_t *c, const void *elem){
     if(c==l->cabeca){return lista_insere_proximo(l,NULL,elem);}
    	return lista_insere_proximo(l,c->ant,elem);
    }
- 
+
 int lista_insere_posicao(lista_t *l, const unsigned int posicao, const void *elem){
   	if (l==NULL){
         	return 0;
@@ -300,7 +306,7 @@ celula_t *lista_busca_recursiva(lista_t *l, const void *elem, celula_t *c){
 	}
 	return lista_busca_recursiva(l, elem, c->prox);
    }
-   
+
 lista_t *lista_separa(lista_t *l,const void *elem){
    	if(l==NULL){
 		return NULL;
@@ -318,7 +324,7 @@ lista_t *lista_separa(lista_t *l,const void *elem){
    		return NULL;
   	}
   	lista_t *lista;
-	lista=lista_cria(l->imprime, l->destruir, l->compara);
+	lista=lista_cria(l->imprime, l->destruir, l->compara,l->salvar);
    	lista->cabeca=encontra_a_celula->prox;
    	lista->cauda=l->cauda;
    	l->cauda=encontra_a_celula;
@@ -332,7 +338,7 @@ lista_t *lista_separa(lista_t *l,const void *elem){
    	return lista;
    }
 
-//--------------------------------------------------------------   
+//--------------------------------------------------------------
    int lista_insere_ordenado(lista_t *l, const void *elem){
    	if(l==NULL){
 		return 0;
@@ -355,3 +361,72 @@ lista_t *lista_separa(lista_t *l,const void *elem){
 	}
 	return lista_insere_proximo(l,cel->ant,elem);
    }
+
+   void imprime_linha(lista_t *buffer){
+        if(buffer->current==NULL){
+            buffer->imprime(buffer->cabeca->dado);
+            buffer->current=buffer->cabeca;
+            return;
+        }
+        buffer->imprime(buffer->current->dado);
+   }
+
+void lista_salva(lista_t *l,FILE *arquivo){
+	if(l==NULL){
+   	return ;
+	}
+	if(l->imprime==NULL){
+	return ;
+	}
+   	celula_t *cel;
+	cel=l->cabeca;
+   	while (1){//desejo pela reprovacao
+	if (cel==NULL){
+	return ;}
+   	l->salvar(cel->dado,arquivo);
+   	cel=cel->prox;
+   	}
+   }
+
+
+   void altera_current (lista_t *buffer,celula_t* posicao){
+        if(posicao>lista_tamanho(buffer)){
+            return ;
+        }
+        int i;
+        buffer->current=posicao;
+   }
+
+   celula_t *retorna_current(lista_t *buffer){
+    if (lista_vazia(buffer)){
+        return NULL;
+    }
+    return buffer->current;
+}
+
+   celula_t *retorna_current_anterior(lista_t *buffer){
+    if (lista_vazia(buffer)){
+        return NULL;
+    }
+    return buffer->current->ant;
+}
+
+   celula_t *retorna_current_proximo(lista_t *buffer){
+    if (lista_vazia(buffer)){
+        return NULL;
+    }
+    return buffer->current->prox;
+}
+
+void pequeno_altera_current(lista_t *buffer,int praonde){
+    if(lista_vazia(buffer)){
+        return;
+    }
+    if(praonde){
+        if(buffer->current->prox)
+         buffer->current=buffer->current->prox;
+        return;
+    }
+    if(buffer->current->ant)
+        buffer->current=buffer->current->ant;
+}
