@@ -190,9 +190,10 @@ int lista_insere_proximo(lista_t *l, celula_t *c, const void *elem){
         	novacelula->prox=l->cabeca;
        		 l->cabeca=novacelula;
        		 l->tamanho=l->tamanho+1;
-		if (lista_tamanho(l)==1){
+            if (lista_tamanho(l)==1){
 		    novacelula->prox=NULL;
-			l->cauda=novacelula;}else{l->cabeca->prox->ant=novacelula;}
+			l->cauda=novacelula;}
+			else{l->cabeca->prox->ant=novacelula;}
         		return 1;
     	}
     	novacelula->prox=c->prox;
@@ -390,10 +391,6 @@ void lista_salva(lista_t *l,FILE *arquivo){
 
 
    void altera_current (lista_t *buffer,celula_t* posicao){
-        if(posicao>lista_tamanho(buffer)){
-            return ;
-        }
-        int i;
         buffer->current=posicao;
    }
 
@@ -430,3 +427,16 @@ void pequeno_altera_current(lista_t *buffer,int praonde){
     if(buffer->current->ant)
         buffer->current=buffer->current->ant;
 }
+
+void current_linha_especifica(lista_t*buffer ,int posicao){
+    if (lista_vazia(buffer))
+        return;
+    if(posicao>lista_tamanho(buffer))
+        return;
+    int i;
+    buffer->current=buffer->cabeca;
+    for(i=1;i<posicao;i++){
+        buffer->current=buffer->current->prox;
+    }
+}
+

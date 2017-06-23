@@ -3,11 +3,15 @@
 #include "lista_interface.h"
 #include "trabalho_interface.h"
 
-int main(char *argv[]){
+int main(){
 char comando;
+char argv[101];
+printf("digite o nome de um arquivo para abrir com o editor\n");
+scanf("%s",argv);
+getchar();
 int teste;
 lista_t *buffer;
-criaLista(buffer);
+criaLista(&buffer);
 teste=abriArquivo(argv,buffer);
 if(teste<0){
     printf("\n arquivo nao encontrado ou inexistente!\n");

@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "trabalho_privado.h"
+#include "getline.h"
 
 void libera(void*dado){
     char *linha;
@@ -9,7 +10,7 @@ void libera(void*dado){
     free(linha);
 }
 
-void imprime (void* dado){
+void imprime (const void* dado){
     char *linha;
     linha=(char*)dado;
     puts(linha);
@@ -28,8 +29,8 @@ void salva (const void * dado,FILE *arquivo){
     fputs(linha,arquivo);
 }
 
-void criaLista(lista_t*buffer){
-    buffer=lista_cria(imprime,libera,compara,salva);
+void criaLista(lista_t**buffer){
+    *buffer=lista_cria(imprime,libera,compara,salva);
 }
 
 int abriArquivo(const char* arquivo,lista_t*buffer){
@@ -64,7 +65,7 @@ void executaComando(char comando, lista_t *buffer){
         case 'i':
         case 'I':
             printf("passou aqui  I");// aqui falta fazeeeer
-            //faz algo
+            funcao_insere(buffer);
             break;
         case 'd':
         case 'D':
@@ -83,7 +84,7 @@ void executaComando(char comando, lista_t *buffer){
             break;
         case 'c':
         case 'C':
-            printf("passou aqui  C");
+            printf("passou aqui  C");//meu deus falta muitoooo
             //faz algo
             break;
         case 'q':
@@ -93,42 +94,41 @@ void executaComando(char comando, lista_t *buffer){
         case 'h':
         case 'H':
         case '?':
-            printf("passou aqui  H");
+            printf("passou aqui  H");//faltaaaaaa
             //faz algo
             break;
         case 'n':
         case 'N':
             printf("passou aqui  N");
-            //faz algo
+            pequeno_altera_current(buffer,1);
             break;
         case 'p':
         case 'P':
             printf("passou aqui  P");
-            //faz algo
+            pequeno_altera_current(buffer,0);
             break;
         case 'b':
         case 'B':
             printf("passou aqui  B");
-            //faz algo
+            altera_current(buffer,lista_cabeca(buffer));
             break;
         case 'e':
         case 'E':
             printf("passou aqui  E");
-            //faz algo
+            altera_current(buffer,lista_cauda(buffer));
             break;
         case 'G':
         case 'g':
             printf("passou aqui  G");
-            //faz algo
+            funcao_vaipralinha(buffer);
             break;
         case 'v':
         case 'V':
-            printf("passou aqui  V");
-            //faz algo
+            lista_imprime(buffer);
             break;
         case 's':
         case 'S':
-            printf("passou aqui  S");
+            printf("passou aqui  S"); // ta faltandooooo
             //faz algo
             break;
         default:
@@ -137,49 +137,51 @@ void executaComando(char comando, lista_t *buffer){
 }
 
 void consultaComando(char *comando,lista_t *buffer){
+    system("cls");//mudar para linux
     printf("Linha atual do Buffer: \n");
     if(lista_cabeca(buffer)){
       imprime_linha(buffer);
     }
     printf("Tamanho do Buffer: %d\n",lista_tamanho(buffer));
     printf("Digite um comando: ");
-    scanf(" %c",comando); // pegar 1 caracter. Tem que manter esse espaço antes do %c para o scanf ignorar o \n.
+    scanf("%c",comando); // pegar 1 caracter. Tem que manter esse espaço antes do %c para o scanf ignorar o \n.
+    getchar();
 }
 
 void funcao_leitura(lista_t *buffer){
-    char *aux;
+    void *aux;
     char nome_do_local[101];
     while (!lista_vazia(buffer)){
-        lista_remove(buffer,NULL,(void**)&aux);
+        lista_remove(buffer,lista_cabeca(buffer),(void**)&aux);
         free(aux);
     }
     //escreva o nome do arquivo
-    scanf("%s\n",nome_do_local);
+    scanf("%s",nome_do_local);
+    getchar();
     abriArquivo((const char*)nome_do_local,buffer);
 }
 
 void funcao_escritura(lista_t *buffer){
     char nome_do_local[101];
-    char *aux;
-    int tam=lista_tamanho(buffer);
     //escreva o nome do arquivo para escritura . (ira sobrescrever qualquer arquivo de mesmo nome )
-    scanf("%s\n",nome_do_local);
+    scanf("%s",nome_do_local);
+    getchar();
     FILE *stream;
-    stream = fopen(arquivo, "w");
+    stream = fopen(nome_do_local, "w");
     if (stream == NULL){
-       return -1;
+       return ;
     }
     lista_salva(buffer,stream);
     fclose(stream);
 }
 
-void funcao_apagalinha(liata_t *buffer){
+void funcao_apagalinha(lista_t *buffer){
     if(lista_vazia(buffer)){
         return;
     }
     char *linha;
     pequeno_altera_current(buffer,1);
-    if(lista_remove(buffer,retorna_current_anterior(buffer),&linha))
+    if(lista_remove(buffer,retorna_current_anterior(buffer),(void**)&linha))
         free(linha);
 }
 
@@ -187,11 +189,12 @@ void funcao_encontra(lista_t*buffer){
     if(lista_vazia(buffer))
         return;
     char string_que_querem_achar[101];
+    printf("escreva o texto que deseja encontrar:");
     //escreva a sting que deseja buscar
-    scanf("%s\n",string_que_querem_achar);
-    int i;
+    scanf("%s",string_que_querem_achar);
+    getchar();
     celula_t*batman_ta_felizao=retorna_current(buffer);
-    while(!strstr((const char*)string_que_querem_achar,(const char*)lista_dado(retorna_current(buffer)))){
+    while(!strstr((const char*)lista_dado(retorna_current(buffer)),(const char*)string_que_querem_achar)){
         if(!retorna_current_proximo(buffer)){
             //nao foi encontrada
             altera_current(buffer,batman_ta_felizao);
@@ -199,6 +202,7 @@ void funcao_encontra(lista_t*buffer){
         }
         pequeno_altera_current(buffer,1);
     }
+    printf("encontrado \n");
 }
 
 void funcao_tamanhos(lista_t *buffer){
@@ -207,5 +211,27 @@ void funcao_tamanhos(lista_t *buffer){
     }
     int numletras;
     numletras=strlen(lista_dado(retorna_current(buffer)));
+    //escreve numero de letras
+    printf(" \n%i numero de letras\n",numletras-1);
+    numletras=lista_tamanho(buffer);
+    //escreve numero linhas
+    printf(" \n%i numero de linhas\n",numletras);
+}
+
+void funcao_vaipralinha(lista_t *buffer){
+    if(lista_vazia(buffer))
+        return;
+    int agr_o_batman_vai_participar;
+    //escreva a linha desejada
+    scanf("%i",&agr_o_batman_vai_participar);
+    getchar();
+    if(agr_o_batman_vai_participar>lista_tamanho(buffer)||agr_o_batman_vai_participar<=0)
+        return;
+    current_linha_especifica(buffer,agr_o_batman_vai_participar);
+}
+
+void funcao_insere(lista_t *buffer){
 
 }
+
+

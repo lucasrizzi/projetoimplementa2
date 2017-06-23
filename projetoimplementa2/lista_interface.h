@@ -187,4 +187,6 @@ celula_t *retorna_current_anterior(lista_t *buffer);
 
 celula_t *retorna_current_proximo(lista_t *buffer);
 
+void current_linha_especifica(lista_t*buffer ,int posicao);
+
 #endif

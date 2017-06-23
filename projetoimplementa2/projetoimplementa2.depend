@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1498173375 source:c:\users\lucas\documents\assuntosfaculdade\prog\projetoimplemeta2\projetoimplementa2\lista.c
+1498180982 source:c:\users\lucas\documents\assuntosfaculdade\prog\projetoimplemeta2\projetoimplementa2\lista.c
 	<stdlib.h>
 	<stdio.h>
 	<lista_privado.h>
@@ -7,14 +7,42 @@
 1498173375 c:\users\lucas\documents\assuntosfaculdade\prog\projetoimplemeta2\projetoimplementa2\lista_privado.h
 	"lista_interface.h"
 
-1498173375 c:\users\lucas\documents\assuntosfaculdade\prog\projetoimplemeta2\projetoimplementa2\lista_interface.h
+1498176066 c:\users\lucas\documents\assuntosfaculdade\prog\projetoimplemeta2\projetoimplementa2\lista_interface.h
 
-1498173375 source:c:\users\lucas\documents\assuntosfaculdade\prog\projetoimplemeta2\projetoimplementa2\main.c
+1498178742 source:c:\users\lucas\documents\assuntosfaculdade\prog\projetoimplemeta2\projetoimplementa2\main.c
 	<stdio.h>
 	<stdlib.h>
 	"lista_interface.h"
 	"trabalho_interface.h"
 
-1498173469 c:\users\lucas\documents\assuntosfaculdade\prog\projetoimplemeta2\projetoimplementa2\trabalho_interface.h
+1498178742 c:\users\lucas\documents\assuntosfaculdade\prog\projetoimplemeta2\projetoimplementa2\trabalho_interface.h
 	"lista_interface.h"
+
+1395515022 source:c:\users\lucas\documents\assuntosfaculdade\prog\projetoimplemeta2\projetoimplementa2\getline.c
+	"getline.h"
+	<stdlib.h>
+	<errno.h>
+	<limits.h>
+
+1498180358 source:c:\users\lucas\documents\assuntosfaculdade\prog\projetoimplemeta2\projetoimplementa2\trabalho.c
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	"trabalho_privado.h"
+	"getline.h"
+
+1497918356 c:\users\lucas\documents\assuntosfaculdade\prog\projetoimplemeta2\projetoimplementa2\trabalho_privado.h
+	"trabalho_interface.h"
+
+1498176664 c:\users\lucas\documents\assuntosfaculdade\prog\projetoimplemeta2\projetoimplementa2\getline.c
+	<assert.h>
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<errno.h>
+	<limits.h>
+	<sys/types.h>
+
+1395515022 c:\users\lucas\documents\assuntosfaculdade\prog\projetoimplemeta2\projetoimplementa2\getline.h
+	<stdio.h>
 
