@@ -24,4 +24,8 @@ void funcao_insere(lista_t *buffer);
 
 void funcao_encontra(lista_t *buffer);
 
+void funcao_insere(lista_t *buffer);
+
+void funcao_substitui(lista_t*buffer);
+
 #endif

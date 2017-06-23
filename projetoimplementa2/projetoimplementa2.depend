@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1498180982 source:c:\users\lucas\documents\assuntosfaculdade\prog\projetoimplemeta2\projetoimplementa2\lista.c
+1498195435 source:c:\users\lucas\documents\assuntosfaculdade\prog\projetoimplemeta2\projetoimplementa2\lista.c
 	<stdlib.h>
 	<stdio.h>
 	<lista_privado.h>
@@ -15,7 +15,7 @@
 	"lista_interface.h"
 	"trabalho_interface.h"
 
-1498178742 c:\users\lucas\documents\assuntosfaculdade\prog\projetoimplemeta2\projetoimplementa2\trabalho_interface.h
+1498198499 c:\users\lucas\documents\assuntosfaculdade\prog\projetoimplemeta2\projetoimplementa2\trabalho_interface.h
 	"lista_interface.h"
 
 1395515022 source:c:\users\lucas\documents\assuntosfaculdade\prog\projetoimplemeta2\projetoimplementa2\getline.c
@@ -24,7 +24,7 @@
 	<errno.h>
 	<limits.h>
 
-1498180358 source:c:\users\lucas\documents\assuntosfaculdade\prog\projetoimplemeta2\projetoimplementa2\trabalho.c
+1498198693 source:c:\users\lucas\documents\assuntosfaculdade\prog\projetoimplemeta2\projetoimplementa2\trabalho.c
 	<stdlib.h>
 	<stdio.h>
 	<string.h>

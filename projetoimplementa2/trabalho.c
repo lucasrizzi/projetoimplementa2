@@ -64,7 +64,7 @@ void executaComando(char comando, lista_t *buffer){
             break;
         case 'i':
         case 'I':
-            printf("passou aqui  I");// aqui falta fazeeeer
+            printf("passou aqui  I");
             funcao_insere(buffer);
             break;
         case 'd':
@@ -129,7 +129,7 @@ void executaComando(char comando, lista_t *buffer){
         case 's':
         case 'S':
             printf("passou aqui  S"); // ta faltandooooo
-            //faz algo
+            funcao_substitui(buffer);
             break;
         default:
             printf("Comando Invalido\n");
@@ -138,6 +138,7 @@ void executaComando(char comando, lista_t *buffer){
 
 void consultaComando(char *comando,lista_t *buffer){
     system("cls");//mudar para linux
+    fflush(stdin);
     printf("Linha atual do Buffer: \n");
     if(lista_cabeca(buffer)){
       imprime_linha(buffer);
@@ -145,7 +146,7 @@ void consultaComando(char *comando,lista_t *buffer){
     printf("Tamanho do Buffer: %d\n",lista_tamanho(buffer));
     printf("Digite um comando: ");
     scanf("%c",comando); // pegar 1 caracter. Tem que manter esse espaço antes do %c para o scanf ignorar o \n.
-    getchar();
+    fflush(stdin);
 }
 
 void funcao_leitura(lista_t *buffer){
@@ -231,7 +232,61 @@ void funcao_vaipralinha(lista_t *buffer){
 }
 
 void funcao_insere(lista_t *buffer){
-
+    int agr_o_batman_vai_participar;
+    //escreva a linha desejada
+    printf("escreva a linha desejada:");
+    scanf("%i",&agr_o_batman_vai_participar);
+    getchar();
+    unsigned int i=0;
+    char *texto,c;
+    printf("\ntexto a ser inserido:");
+    c=getchar();
+    texto=NULL;
+    while(c!='\n'){
+        i++;
+        texto=(char*)realloc(texto,sizeof(char)+i+2);
+        texto[i-1]=c;
+        c=getchar();
+    }
+    texto[i]='\n';
+    texto[i+1]='\0';
+    lista_insere_posicao(buffer,agr_o_batman_vai_participar,(void*)texto);
+    current_linha_especifica(buffer,agr_o_batman_vai_participar);
 }
 
-
+void funcao_substitui(lista_t*buffer){
+    int agr_o_batman_vai_participar;
+    //escreva a linha desejada
+    printf("escreva a linha desejada:");
+    scanf("%i",&agr_o_batman_vai_participar);
+    getchar();
+    current_linha_especifica(buffer,agr_o_batman_vai_participar);
+    imprime_linha(buffer);
+    printf("\ndeseja mesmo substituir esta linha? S/N\n");
+    char aux;
+    aux=getchar();
+    getchar();
+    if(aux=='s'||aux=='S'){
+        fflush(stdin);
+        unsigned int i=0;
+    char *texto,c;
+    printf("\ntexto a ser inserido:");
+    c=getchar();
+    texto=NULL;
+    while(c!='\n'){
+        i++;
+        texto=(char*)realloc(texto,sizeof(char)+i+2);
+        texto[i-1]=c;
+        c=getchar();
+    }
+    texto[i]='\n';
+    texto[i+1]='\0';
+    lista_insere_posicao(buffer,agr_o_batman_vai_participar,(void*)texto);
+    current_linha_especifica(buffer,agr_o_batman_vai_participar);
+    if(!lista_proximo(retorna_current(buffer)))
+        return;
+    pequeno_altera_current(buffer,1);
+    funcao_apagalinha(buffer);
+    pequeno_altera_current(buffer,0);
+    }
+}

@@ -229,7 +229,7 @@ int lista_insere_posicao(lista_t *l, const unsigned int posicao, const void *ele
    	 if (elem==NULL){
        		 return 0;
   	  }
-  	if(posicao>=lista_tamanho(l)){
+  	if(posicao>=lista_tamanho(l)||posicao<=0){
    	return lista_insere_proximo(l,l->cauda,elem);
    	}
    	celula_t *cel;
